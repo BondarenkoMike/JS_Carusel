@@ -1,0 +1,16 @@
+  //@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+  // @import "../../node_modules/bootstrap/scss/variables.scss";
+  @import "presets";
+  //  @import "components/slider/slider";
+  @import "components";
+  //  @import "slider";
+
+
+  .carousel {
+    &__container {
+      position: relative;
+      width: 100%;
+    }
+
+    min-width: 288px;
+  }

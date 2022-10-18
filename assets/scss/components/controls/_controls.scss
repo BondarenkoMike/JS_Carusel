@@ -1,0 +1,53 @@
+@use '../../mixins/mixins-media' as *;
+
+.controls {
+  z-index: 1;
+  padding: 5px;
+
+  display: flex;
+  //align-content: center;
+
+  @include sm {
+    flex-direction: column;
+    justify-content: flex-end;
+    position: absolute;
+    bottom: 10px;
+    right: 0;
+  }
+
+  @include sm-min {
+    flex-direction: row;
+    justify-content: flex-start; //center; //space-between; //    
+  }
+
+  &__item {
+    border: 1px solid black;
+    display: flex;
+    background-color: white;
+    opacity: 0.35;
+    padding: 5px 10px;
+
+    &:hover {
+      @include sm-min {
+        opacity: 0.8;
+        transition: opacity 0.2s;
+      }
+    }
+
+    @include sm {
+      border-radius: 5px;
+      width: 30px;
+      height: 30px;
+      margin: 5px 5px;
+      align-items: center;
+    }
+
+    @include sm-min {
+      border-radius: 4px;
+      width: 30px;
+      opacity: 0.3;
+      margin: 0px 5px;
+      transition: opacity 0.5s;
+    }
+  }
+}
