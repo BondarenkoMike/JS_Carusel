@@ -326,6 +326,7 @@
     isPlaying = (options && options.isPlaying === true) ? true : false;
     currentSlide = options ? options.startSlideNum : 0;
 
+<<<<<<< HEAD
     createStructure(options);
     slides = document.querySelectorAll('.slide');
 
@@ -357,3 +358,4 @@
     }
   });
 }());
+
