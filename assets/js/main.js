@@ -2,10 +2,10 @@
 (function () {
   const options = {
     slidesCount: 6,
-    isPlaying: false,
+    isPlaying: true,
     timeOut: 1000,
     slideChangeEffect: null, // пока не реализовано
-    startSlideNum: 0, //0-based 
+    startSlideNum: 4, //0-based 
     displayElements: {
       controls: true,
       indicators: true
@@ -98,6 +98,7 @@
     isPlaying = true;
     pauseButton.innerHTML = createFaElement('fa-pause');
   }
+
   /**
    * Остановка слайдшоу. Пауза.
    */
@@ -339,11 +340,9 @@
   setupListeners();
 
   if (isPlaying) {
-    if (timerID) pauseSlideShow();
+    gotoSlide(currentSlide);
     timerID = setInterval(nextSlide, options.timeOut);
   }
   else
     pauseSlideShow();
-
-  gotoSlide(currentSlide);
 }());
