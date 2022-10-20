@@ -1,22 +1,6 @@
 //const { Exception } = require("sass");
 (function () {
-  const options = {
-    slidesCount: 6,
-    isPlaying: false,
-    timeOut: 1000,
-    slideChangeEffect: null, // пока не реализовано
-    startSlideNum: 0, //0-based 
-    displayElements: {
-      controls: true,
-      indicators: true
-    },
-    handleEvents: {
-      mouse: true,
-      kbd: true,
-      swipe: true
-    }
-  }
-
+  let options;
   const KEYCODE_ARROW_LEFT = 'ArrowLeft'
   const KEYCODE_ARROW_RIGHT = 'ArrowRight'
   const KEYCODE_SPACE = 'Space'
@@ -26,23 +10,21 @@
   let timerID = null;
   let i = 0;
   let swipeStartX, swipeStartY, swipeEndX, swipeEndY
-  let wasPlaying_beforeMouseOver = options.isPlaying;
+  //let wasPlaying_beforeMouseOver = options.isPlaying;
   let slides;
   let indicators;
   let controls;
 
-  let timeOut = options ? options.timeOut : 1000;
-  let slidesCount = options ? options.slidesCount : 2;// slides.length;
-  let isPlaying = (options && options.isPlaying === true) ? true : false;
-  let currentSlide = options ? options.startSlideNum : 0;
+  let timeOut;
+  let slidesCount
+  let isPlaying;
+  let currentSlide;
 
   var pauseButton;
   var prevButton;
   var nextButton;
   var slider;
 
-  createStructure(options);
-  slides = document.querySelectorAll('.slide');
 
 
   /**
@@ -98,6 +80,7 @@
     isPlaying = true;
     pauseButton.innerHTML = createFaElement('fa-pause');
   }
+
   /**
    * Остановка слайдшоу. Пауза.
    */
@@ -335,15 +318,42 @@
       throw Error('Не найден элемент с id ="carousel"');
     }
   }
+  function init(sliderOptions) {
+    if (sliderOptions) { options = sliderOptions };
 
-  setupListeners();
+    timeOut = options ? options.timeOut : 1000;
+    slidesCount = options ? options.slidesCount : 2;
+    isPlaying = (options && options.isPlaying === true) ? true : false;
+    currentSlide = options ? options.startSlideNum : 0;
 
-  if (isPlaying) {
-    if (timerID) pauseSlideShow();
-    timerID = setInterval(nextSlide, options.timeOut);
+    createStructure(options);
+    slides = document.querySelectorAll('.slide');
+
+    setupListeners();
+
+    if (isPlaying) {
+      gotoSlide(currentSlide);
+      timerID = setInterval(nextSlide, options.timeOut);
+    }
+    else
+      pauseSlideShow();
   }
-  else
-    pauseSlideShow();
 
-  gotoSlide(currentSlide);
+  init({
+    isPlaying: true,
+    timeOut: 1000,
+    slideChangeEffect: null, // пока не реализовано
+    slidesCount: 6,
+    startSlideNum: 2, //0-based
+
+    displayElements: {
+      controls: true,
+      indicators: true
+    },
+    handleEvents: {
+      mouse: true,
+      kbd: true,
+      swipe: true
+    }
+  });
 }());
