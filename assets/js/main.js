@@ -212,11 +212,12 @@ function createStructure(options = null) {
   document.querySelector('.controls__prev').setAttribute('id', 'prev');
 }
 
-if (!isPlaying) pauseSlideShow();
+setupListeners()
 
 if (options.isPlaying) {
+  gotoSlide(currentSlide);
   timerID = setInterval(nextSlide, options.timeOut);
 }
-
-gotoSlide(currentSlide);
-setupListeners()
+else {
+  pauseSlideShow();
+}
