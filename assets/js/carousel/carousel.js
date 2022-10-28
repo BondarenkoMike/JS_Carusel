@@ -43,14 +43,14 @@ Carousel.prototype = {
   /**
    * Инициализация переменных функции из полученных настроек
    */
-  _initProps: function () {
+  _initProps() {
     this.container = document.getElementById(this.options.carouselID);
     this.isPlaying = this.options.isPlaying;
     this.timeOut = this.options.timeOut;
     this.currentSlide = this.options.startSlideNum;
   },
 
-  init: function (sliderOptions) {
+  init(sliderOptions) {
     this.options = { ...this.defaultOptions, ...sliderOptions };
     this._initProps();
     this._createStructure();
@@ -65,14 +65,14 @@ Carousel.prototype = {
   /**
    * Переход к следующему слайду
    */
-  _nextSlide: function () {
+  _nextSlide() {
     this._gotoSlide(+this.currentSlide + 1);
   },
 
   /**
    * Переход к предыдущему слайду
    */
-  _prevSlide: function () {
+  _prevSlide() {
     this._gotoSlide(+this.currentSlide - 1);
   },
 
@@ -81,7 +81,7 @@ Carousel.prototype = {
    * Переход к слайду с определённым номером
    * @param slideNum : номер слайда оторый будет сделан активным
    */
-  _gotoSlide: function (slideNum) {
+  _gotoSlide(slideNum) {
     if ((0 > this.slides.length) || (slideNum > this.slides.length) || !isFinite(slideNum)) {
       throw Error("Значение параметр slideNum не является корректным номером слайда")
     }
@@ -101,7 +101,7 @@ Carousel.prototype = {
   /***
     * Создание элемента управления
     */
-  _createFaElement: function (fa_class) {
+  _createFaElement(fa_class) {
     let i = document.createElement('i')
     i.classList.add('fas');
     i.classList.add(fa_class);
@@ -111,7 +111,7 @@ Carousel.prototype = {
   /**
    * Запуск слайдшоу
    */
-  playSlideShow: function () {
+  playSlideShow() {
     if (!this.timerID) {
       this.timerID = setInterval(this._nextSlide.bind(this), this.timeOut);
     }
@@ -122,7 +122,7 @@ Carousel.prototype = {
   /**
    * Остановка слайдшоу. Пауза.
    */
-  pauseSlideShow: function () {
+  pauseSlideShow() {
     clearInterval(this.timerID);
     this.timerID = null;
     this.isPlaying = false;
@@ -134,7 +134,7 @@ Carousel.prototype = {
    * 
    * @param e Событие родительского элемента индикаторов
    */
-  _indicatorsClick: function (e) {
+  _indicatorsClick(e) {
     let target = e.target;
 
     if (target.classList.contains('indicators__item')) {
@@ -145,7 +145,7 @@ Carousel.prototype = {
   /**
    * Обработчик для кнопки "Next"
    */
-  _nextSlideHandler: function () {
+  _nextSlideHandler() {
     this._nextSlide();
     this.pauseSlideShow();
   },
@@ -153,14 +153,14 @@ Carousel.prototype = {
   /**
    * Обработчик для кнопки "Prev"
    */
-  _prevSlideHandler: function () {
+  _prevSlideHandler() {
     this._prevSlide();
     this.pauseSlideShow();
   },
   /**
    * Обработчик для кнопки "Play/Pause"
    */
-  _startStopHandler: function () {
+  _startStopHandler() {
     if (this.isPlaying) {
       this.pauseSlideShow();
     }
@@ -171,7 +171,7 @@ Carousel.prototype = {
   /**
    * Назначение обраотчиков событий
    */
-  _setupListeners: function () {
+  _setupListeners() {
     this.indicators = this.container.querySelector('div.indicators');
     if (this.indicators) {
       this.indicators.addEventListener('click', this._indicatorsClick.bind(this));
@@ -195,14 +195,14 @@ Carousel.prototype = {
   /**
      * Обработчик события когда указатель мыши покидает слайдер. 
      */
-  _mouseoutHandler: function () {
+  _mouseoutHandler() {
     if (this.wasPlaying_beforeMouseOver) this.playSlideShow();
   },
 
   /**
    * Обработчик события когда указатель мыши проходит над слайдером. 
    */
-  _mouseoverHandler: function () {
+  _mouseoverHandler() {
     this.wasPlaying_beforeMouseOver = this.isPlaying;
     if (this.wasPlaying_beforeMouseOver) {
       this.pauseSlideShow();
@@ -211,7 +211,7 @@ Carousel.prototype = {
   /**
    * Обработчик управления слайдером с клавиатуры
    */
-  _keyPressed: function (e) {
+  _keyPressed(e) {
     if (this.options.handleEvents.kbd === true) {
       switch (e.code) {
         case this.KEYCODE_ARROW_LEFT:
@@ -237,7 +237,7 @@ Carousel.prototype = {
   /**
      * Создание разметки слайдера
      */
-  _createStructure: function () {
+  _createStructure() {
     //    this.options = options;  
     if (!this.container) {
       throw Error(`Не найден элемент с id ="${this.options.carouselID}"`);
