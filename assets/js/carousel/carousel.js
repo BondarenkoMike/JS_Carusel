@@ -1,57 +1,58 @@
 console.log('Sample JavaScript #6 HW #18.');
 
-function Carousel() {
-  this.defaultOptions = {
-    carouselID: 'carousel',
-    slideClass: 'slide',
-    timeOut: 1000,
-    isPlaying: true,
-    slideChangeEffect: null, // не реализовано
-    slidesCount: 2,
-    startSlideNum: 0, //0-based
+class Carousel {
+  constructor(sliderOptions) {
+    this.defaultOptions = {
+      carouselID: 'carousel',
+      slideClass: 'slide',
+      timeOut: 1000,
+      isPlaying: true,
+      slideChangeEffect: null, // не реализовано
+      slidesCount: 2,
+      startSlideNum: 0, //0-based
 
-    displayElements: {
-      controls: true,
-      indicators: true
-    },
-    handleEvents: {
-      mouse: true,
-      kbd: true,
-      swipe: true
+      displayElements: {
+        controls: true,
+        indicators: true
+      },
+
+      handleEvents: {
+        mouse: true,
+        kbd: true,
+        swipe: true
+      }
     }
+    this.options = { ...this.defaultOptions, ...sliderOptions };
+    this.options;
+    this.container;
+    this.timerID = null;
+
+    this.KEYCODE_ARROW_LEFT = 'ArrowLeft'
+    this.KEYCODE_ARROW_RIGHT = 'ArrowRight'
+    this.KEYCODE_SPACE = 'Space'
+
+    this.prevIndicator = null;
+    this.slides;
+    this.indicators;
+    this.controls;
+
+    this.pauseButton;
+    this.prevButton;
+    this.nextButton;
+    this.slider;
   }
-  this.options;
-  this.container;
-  this.timerID = null;
-
-  this.KEYCODE_ARROW_LEFT = 'ArrowLeft'
-  this.KEYCODE_ARROW_RIGHT = 'ArrowRight'
-  this.KEYCODE_SPACE = 'Space'
-
-  this.prevIndicator = null;
-  this.slides;
-  this.indicators;
-  this.controls;
-
-  this.pauseButton;
-  this.prevButton;
-  this.nextButton;
-  this.slider;
-}
-
-Carousel.prototype = {
   /**
-   * Инициализация переменных функции из полученных настроек
-   */
+    * Инициализация переменных функции из полученных настроек
+    */
   _initProps() {
     this.container = document.getElementById(this.options.carouselID);
     this.isPlaying = this.options.isPlaying;
     this.timeOut = this.options.timeOut;
     this.currentSlide = this.options.startSlideNum;
-  },
+  }
 
-  init(sliderOptions) {
-    this.options = { ...this.defaultOptions, ...sliderOptions };
+  init() {
+
     this._initProps();
     this._createStructure();
     this._gotoSlide(this.currentSlide);
@@ -60,21 +61,21 @@ Carousel.prototype = {
       this.playSlideShow();
     }
     else this.pauseSlideShow();
-  },
+  }
 
   /**
    * Переход к следующему слайду
    */
   _nextSlide() {
     this._gotoSlide(+this.currentSlide + 1);
-  },
+  }
 
   /**
    * Переход к предыдущему слайду
    */
   _prevSlide() {
     this._gotoSlide(+this.currentSlide - 1);
-  },
+  }
 
 
   /**
@@ -90,13 +91,15 @@ Carousel.prototype = {
     this.currentSlide = (slideNum + this.options.slidesCount) % this.options.slidesCount;
     this.slides[this.currentSlide].classList.toggle('slide-active');
 
-    this.prevIndicator = this.container.querySelector('.indicators__item-active');
-    if (this.prevIndicator !== null) {
-      this.prevIndicator.classList.remove('indicators__item-active');
+    if (this.options.displayElements.indicators === true) {
+      this.prevIndicator = this.container.querySelector('.indicators__item-active');
+      if (this.prevIndicator !== null) {
+        this.prevIndicator.classList.remove('indicators__item-active');
+      }
+      this.prevIndicator = document.querySelector(`.indicators__item[data-slide-to='${this.currentSlide}']`);
+      this.prevIndicator.classList.add('indicators__item-active');
     }
-    this.prevIndicator = document.querySelector(`.indicators__item[data-slide-to='${this.currentSlide}']`);
-    this.prevIndicator.classList.add('indicators__item-active');
-  },
+  }
 
   /***
     * Создание элемента управления
@@ -106,7 +109,7 @@ Carousel.prototype = {
     i.classList.add('fas');
     i.classList.add(fa_class);
     return i.outerHTML;
-  },
+  }
 
   /**
    * Запуск слайдшоу
@@ -116,8 +119,10 @@ Carousel.prototype = {
       this.timerID = setInterval(this._nextSlide.bind(this), this.timeOut);
     }
     this.isPlaying = true;
-    this.pauseButton.innerHTML = this._createFaElement('fa-pause');
-  },
+    if (this.pauseButton) {
+      this.pauseButton.innerHTML = this._createFaElement('fa-pause');
+    }
+  }
 
   /**
    * Остановка слайдшоу. Пауза.
@@ -126,8 +131,10 @@ Carousel.prototype = {
     clearInterval(this.timerID);
     this.timerID = null;
     this.isPlaying = false;
-    this.pauseButton.innerHTML = this._createFaElement('fa-play');
-  },
+    if (this.pauseButton) {
+      this.pauseButton.innerHTML = this._createFaElement('fa-play');
+    }
+  }
 
   /**
    * Обработчик нажатия на индикатор слайда. Переход к соответствующему слайду.  
@@ -141,14 +148,14 @@ Carousel.prototype = {
       this._gotoSlide(parseInt(target.dataset.slideTo));
       this.pauseSlideShow();
     }
-  },
+  }
   /**
    * Обработчик для кнопки "Next"
    */
   _nextSlideHandler() {
     this._nextSlide();
     this.pauseSlideShow();
-  },
+  }
 
   /**
    * Обработчик для кнопки "Prev"
@@ -156,7 +163,7 @@ Carousel.prototype = {
   _prevSlideHandler() {
     this._prevSlide();
     this.pauseSlideShow();
-  },
+  }
   /**
    * Обработчик для кнопки "Play/Pause"
    */
@@ -167,7 +174,7 @@ Carousel.prototype = {
     else {
       this.playSlideShow();
     }
-  },
+  }
   /**
    * Назначение обраотчиков событий
    */
@@ -190,14 +197,14 @@ Carousel.prototype = {
       document.addEventListener('keydown', this._keyPressed.bind(this)); // let wasPlaying =options.isPlaying;    
     }
 
-  },
+  }
 
   /**
      * Обработчик события когда указатель мыши покидает слайдер. 
      */
   _mouseoutHandler() {
     if (this.wasPlaying_beforeMouseOver) this.playSlideShow();
-  },
+  }
 
   /**
    * Обработчик события когда указатель мыши проходит над слайдером. 
@@ -207,7 +214,7 @@ Carousel.prototype = {
     if (this.wasPlaying_beforeMouseOver) {
       this.pauseSlideShow();
     }
-  },
+  }
   /**
    * Обработчик управления слайдером с клавиатуры
    */
@@ -233,7 +240,7 @@ Carousel.prototype = {
           }
       }
     }
-  },
+  }
   /**
      * Создание разметки слайдера
      */
@@ -285,7 +292,8 @@ Carousel.prototype = {
     }
 
     // Controls
-    let control = i = null;
+    let control = null;
+    let i = null;
     let caruselWrapper = document.createElement('div');
     let slidersWrapper = document.createElement('div');
 
@@ -322,4 +330,4 @@ Carousel.prototype = {
     this._setupListeners();
   }
 };
-Carousel.prototype.constructor = Carousel;
+export default Carousel;

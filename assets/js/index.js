@@ -1,5 +1,7 @@
-const carusel = new Carousel()
-carusel.init({
+import SwipeCarousel from "./carousel/carousel-swipe.js";
+import Carousel from "./carousel/carousel.js";
+
+const carusel = new Carousel({
   isPlaying: true,          // стартовое состояние
   timeOut: 1000,
   slideChangeEffect: null,  // не реализовано
@@ -17,3 +19,4 @@ carusel.init({
     swipe: true
   }
 });
+carusel.init();
